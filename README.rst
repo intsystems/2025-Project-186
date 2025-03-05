@@ -39,4 +39,4 @@ Software modules developed as part of the study
 
 Link review
 ================================================
-1. Link <https://docs.google.com/document/d/1HYY59SffagG8sc4ZQNTZ0Nbx69hvLzqrs12kkMKJgDM/edit?tab=t.0_
+1. Link <https://docs.google.com/document/d/1HYY59SffagG8sc4ZQNTZ0Nbx69hvLzqrs12kkMKJgDM/edit?tab=t.0>_
