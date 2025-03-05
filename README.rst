@@ -36,3 +36,7 @@ Software modules developed as part of the study
 ======================================================
 1. A python package *mylib* with all implementation `here <https://github.com/intsystems/ProjectTemplate/tree/master/src>`_.
 2. A code with all experiment visualisation `here <https://github.comintsystems/ProjectTemplate/blob/master/code/main.ipynb>`_. Can use `colab <http://colab.research.google.com/github/intsystems/ProjectTemplate/blob/master/code/main.ipynb>`_.
+
+Link review
+================================================
+1. [Link](https://docs.google.com/document/d/1HYY59SffagG8sc4ZQNTZ0Nbx69hvLzqrs12kkMKJgDM/edit?tab=t.0)
