@@ -187,7 +187,29 @@
         
 
         \section{Problem statement}
+        Пусть  задан \( \mathcal{D} = (\mathbf{X}_t \; | \; t \in \{ t_i \}_{i=1}^N )\) - временной ряд. Положим, что данный временной ряд порожден динамической системой (1) с неизвестным, меняющимся во времени параметром $\mathbf{w}(t)$.
+        \begin{equation}
+            \frac{d}{dt}
+            \begin{pmatrix}
+            \mathbf{X}(t) \\
+            \mathbf{w}(t)
+            \end{pmatrix}
+            =
+            \begin{pmatrix}
+            f(\mathbf{X}(t), \mathbf{w}(t)) \\
+            g_\theta(t)
+            \end{pmatrix}
+        \end{equation} где $g_\theta(t)$ - элемент параметризованного семейства динамик параметра $\mathbf{w}(t)$.
 
+        Пусть задан лосс $\mathcal{L}(\mathbf{X}, \widehat{\mathbf{X}}) = \frac{1}{N} \sum\limits_{i = 1}^{N} \| \mathbf{X}_i - \widehat{\mathbf{X}_i}\|$.
+
+        Необходимо найти параметр $\widehat{\theta}$, такой что
+
+        \begin{equation}
+            \widehat{\theta} = \arg\min_{\theta} \mathcal{L}(\mathbf{X}, \widehat{\mathbf{X}})
+        \end{equation}
+
+        
         
         
         
