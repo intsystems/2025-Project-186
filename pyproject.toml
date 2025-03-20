@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "2025-project-186"
+version = "0.1.0"
+description = "Researching dynamical systems"
+authors = ["your_name"]
+readme = "README.rst"
+include = [
+    { path = "node" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -18,3 +18,23 @@ Overleaf with paper
 ================================================
 1. `Here <https://www.overleaf.com/5594861172nndwyvfsqtwx#d214be>`_.
 
+
+Project structure
+-----------------
+
+```bash
+.
+├── LICENSE
+├── node            # common components
+├── experiments     # paper's experiments
+├── paper
+├── README.rst
+└── slides
+```
+
+Installing
+----------
+
+```bash
+    poetry install
+```
