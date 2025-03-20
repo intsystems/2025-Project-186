@@ -23,7 +23,7 @@ Project structure
 -----------------
 
 ::
-    
+
     .
     ├── LICENSE
     ├── node            # common components
@@ -35,5 +35,6 @@ Project structure
 Installing
 ----------
 
-.. code-block:: bash
+.. code:: bash
+
     poetry install
