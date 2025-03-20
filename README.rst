@@ -22,19 +22,18 @@ Overleaf with paper
 Project structure
 -----------------
 
-```bash
-.
-├── LICENSE
-├── node            # common components
-├── experiments     # paper's experiments
-├── paper
-├── README.rst
-└── slides
-```
+::
+    
+    .
+    ├── LICENSE
+    ├── node            # common components
+    ├── experiments     # paper's experiments
+    ├── paper
+    ├── README.rst
+    └── slides
 
 Installing
 ----------
 
-```bash
+.. code-block:: bash
     poetry install
-```
