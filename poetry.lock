@@ -1949,6 +1949,17 @@ typing = ["typing-extensions"]
 xmp = ["defusedxml"]
 
 [[package]]
+name = "pipe"
+version = "2.2"
+description = "Module enabling a sh like infix syntax (using pipes)"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pipe-2.2-py3-none-any.whl", hash = "sha256:0a5c3202ff35122f69a34ccbd40c9658646f033cc941055304fe8bfa7e13376e"},
+    {file = "pipe-2.2.tar.gz", hash = "sha256:6a253198e3bc542ffaf0a4222376586bce8583b27a9ddbc2cfbaa554c049230d"},
+]
+
+[[package]]
 name = "platformdirs"
 version = "4.3.7"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
@@ -3484,4 +3495,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "f15ef362dd10bc1f8af5db01850c590191ad148d48768f4a0d6852fc6cee566c"
+content-hash = "5fdd091bda2bda8ff70e3022a5b8e2b797f83d284a67d63253d5fa2aa22ad838"
