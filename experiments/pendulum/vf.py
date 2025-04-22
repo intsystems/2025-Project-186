@@ -54,24 +54,24 @@ class PendulumNodeVf(nn.Module):
 
 
 class ODELightningModule(pl.LightningModule):
-    def __init__(self, vf: nn.Module, t: torch.Tensor, lr=0.001):
+    def __init__(self, vf: PendulumNodeVf, t: torch.Tensor, g_true: torch.FloatTensor, lr=1e-3):
         """_summary_
 
         Args:
             vf (nn.Module): _description_
             t (torch.Tensor): time grid, unified for all trajectories
             lr (float, optional): _description_. Defaults to 0.001.
+            g_true (torch.FloatTensor): needed to validate predicted g(t)
         """
         super().__init__()
         self.vf = vf
         self.lr = lr
+        self.register_buffer("g_true", g_true)
         self.register_buffer('t', t)
         self.criterion = nn.MSELoss()
 
     def forward(self, x0, t):
-        return torch.swapaxes(
-            odeint(self.vf, x0, t, rtol=1e-2), 0, 1
-        )
+        return torch.swapaxes(odeint(self.vf, x0, t, rtol=1e-2), 0, 1)
 
     def training_step(self, batch, batch_idx):
         x0, x = batch
@@ -82,6 +82,12 @@ class ODELightningModule(pl.LightningModule):
 
         self.log("train_loss", loss, prog_bar=True, on_step=True)
         return loss
+    
+    def on_train_epoch_end(self):
+        # log uniform convergance norm of g functions
+        g0 = self.g_true[0][None, ...]
+        g_pred = odeint(self.vf.g_vf, g0, self.t, rtol=1e-2).squeeze()
+        self.log("C_norm", torch.max(torch.abs(g_pred - self.g_true)), on_epoch=True)
 
     def configure_optimizers(self):
         optimizer = optim.Adam(self.parameters(), lr=self.lr)

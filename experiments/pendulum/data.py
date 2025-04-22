@@ -1,6 +1,5 @@
 """ Data generation utilities
 """
-
 from typing import Callable
 
 import torch
@@ -29,6 +28,6 @@ def generate_trajectories(
     # place batch dimension first
     trajectories = torch.swapaxes(trajectories, 0, 1)
     # add noise
-    trajectories += sigma * torch.randn_like(trajectories, device=trajectories.device)
+    trajectories += sigma * torch.randn_like(trajectories)
 
     return trajectories
