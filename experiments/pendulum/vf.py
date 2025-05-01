@@ -66,8 +66,8 @@ class ODELightningModule(pl.LightningModule):
         super().__init__()
         self.vf = vf
         self.lr = lr
-        self.register_buffer("g_true", g_true)
-        self.register_buffer('t', t)
+        self.register_buffer("g_true", g_true.clone())
+        self.register_buffer('t', t.clone())
         self.criterion = nn.MSELoss()
 
     def forward(self, x0, t):
