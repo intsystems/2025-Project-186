@@ -4,57 +4,58 @@ from torch import nn, optim
 import lightning as pl
 from torch.utils.data import Dataset, DataLoader
 from torchdiffeq import odeint_adjoint as odeint
+import lightning.pytorch as pl
+from lightning.pytorch.loggers import TensorBoardLogger
+from datetime import datetime
 
 class NodeField(nn.Module):
-    def __init__(self, input_dim=2, hidden_dim=1):
+    def __init__(self, input_dim=3):
         super().__init__()
-        self.input_dim = input_dim
-        self.hidden_dim = hidden_dim
-        
-        self.hidden_dynamics = nn.Sequential(
-            nn.Linear(1, hidden_dim * 2),
+        self.dynamics = nn.Sequential(
+            nn.Linear(input_dim, 128),
+            nn.BatchNorm1d(128),
             nn.ReLU(),
-            nn.Linear(hidden_dim * 2, hidden_dim)
-        )
-        self.observed_dynamics = nn.Sequential(
-            nn.Linear(input_dim + hidden_dim, input_dim + hidden_dim),
-            nn.ReLU(),
-            nn.Linear(input_dim + hidden_dim, input_dim)
+            nn.Linear(128, input_dim)
         )
 
-    def forward(self, t, xw):
-        x = xw[..., :self.input_dim]
-        w = xw[..., self.input_dim:]
-
-        t_ = t.view(1, -1, 1).expand(x.size(0), -1, -1)
-        dw_dt = self.hidden_dynamics(t_)
-        xw_concat = torch.cat([x, w], dim=-1)
-        dx_dt = self.observed_dynamics(xw_concat)
-        
-        return torch.cat([dx_dt, dw_dt], dim=-1)
-
+    def forward(self, t, x):
+        return self.dynamics(x)
 
 class DynamicSystemLearner(pl.LightningModule):
     def __init__(self, dt=0.1, lr=1e-3):
         super().__init__()
         self.save_hyperparameters()
         self.vf = NodeField()
-        self.criterion = nn.MSELoss()
-
-    def forward(self, xw0, t):
-        return odeint(self.vf, xw0, t, rtol=1e-3).squeeze(0)
+        self.criterion = nn.L1Loss()
+        
+    def forward(self, x0, t):
+        return odeint(self.vf, x0, t, rtol=1e-2)
 
     def training_step(self, batch, batch_idx):
-        xw_true = batch
+        x_true = batch
+        B, T, D = x_true.shape
         
-        num_steps = xw_true.size(0)
-        t = torch.linspace(0, num_steps*self.hparams.dt, num_steps, device=self.device)
+        t = torch.linspace(0, (T-1)*self.hparams.dt, T, device=self.device)
+        x0 = x_true[:, 0, :]
+        pred_traj = odeint(self.vf, x0, t, rtol=1e-2).permute(1, 0, 2)
+
         
-        xw0 = xw_true[0].unsqueeze(0)
-        pred_traj = self(xw0, t).squeeze(1)
-        loss = self.criterion(pred_traj, xw_true)
+        loss = self.criterion(pred_traj, x_true)
         self.log('train_loss', loss, prog_bar=True)
         return loss
 
+    def on_after_backward(self):
+        if self.global_step % 50 == 0:
+            total_norm = 0.0
+            for p in self.parameters():
+                if p.grad is not None:
+                    param_norm = p.grad.detach().data.norm(2)
+                    total_norm += param_norm.item() ** 2
+            total_norm = total_norm ** 0.5
+            self.log('grad_norm', total_norm, prog_bar=True)
+
     def configure_optimizers(self):
-        return optim.AdamW(self.parameters(), lr=self.hparams.lr)
+        optimizer = optim.Adam(self.parameters(), lr=self.hparams.lr)
+        return {
+            "optimizer": optimizer
+        }
